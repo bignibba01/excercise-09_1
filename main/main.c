@@ -9,11 +9,14 @@ VENTRUCCI TOMAS, MARCHETTI DAVIDE, ZOLI FEREDEICO
 */
 
 #define _CRT_SECURE_NO_WARNINGS
-#include <float.h>
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-void addBook(struct Libro*);					//aggiunge un libro al file
+void addBook(struct Libro*);				//aggiunge un libro al file
 void deleteBook();							//elimina un libro
+void drawMenu();							//disegna il menu principale per scegliere le operazioni
+int getLastId(struct Libro);				//prende l'ultimo id inserito nel file di testo
 void initializeBook(struct Libro);			//inizializzo un libro
 void showBooks();							//fa vedere tutti i libri
 void showSomeBooks(int);					//fa vedere alcuni libri
@@ -33,23 +36,58 @@ struct Libro {
 
 int main() {
 
-	//initialize book struct char pointers
-	struct Libro *book;
-	FILE file;
-	char* path = "..\\File\\file.bin";
+	_Bool endLoop = false;
 
-	if (fopen(path, "wb") == NULL) {
-		printf("Errore -> Impossibile aprire il file\n");
-		return 0;
+	while (true) {
+		
+		int result;
+		
+		drawMenu();
+
+		printf("Scegli l'operazione da eseguire -> ");
+		scanf(" %d", &result);
+		fflush(stdin);
+
+		switch (result) {
+			case 1: {
+				struct Libro* book;
+
+				book = (struct Libro*)malloc(sizeof(struct Libro));
+
+				FILE* file;
+				char* path = "..\\File\\file.bin";
+
+				if ((file = fopen(path, "wb")) == NULL) {
+					printf("Errore -> Impossibile aprire il file\n");
+					return 0;
+				}
+
+				addBook(book);
+
+				fclose(file);
+				free(book);
+
+				break;
+			}
+			case 2: {
+				break;
+			}
+			case 3: {
+				break;
+			}
+			case 4: {
+				break;
+			}
+			case 5: {
+				endLoop = true;
+				break;
+			}
+		}
+		
+		system("cls");
+		if (endLoop)
+			break;
 	}
-
-
-		
-	book = (struct Libro*)malloc(sizeof(struct Libro));
-
-	addBook(book);
-		
-	printf("%d\n", book->valutazione);
 
 	return 0;
 }
@@ -83,6 +121,16 @@ void addBook(struct Libro *book) {
 	printf("Valutazione -> ");
 	scanf(" %d", &book->valutazione);
 	fflush(stdin);
+}
+
+void drawMenu() {
+	printf("Lista dei libri su un file binario\n\
+1)Aggiungi libro\n\
+2)Cancella un libro\n\
+3)Visualizza un libro\n\
+4)Viusalizza per valutazione\n\
+5)Esci\n");
+
 }
 
 void initializeBook(struct Libro *book) {
