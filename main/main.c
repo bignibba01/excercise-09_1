@@ -38,7 +38,12 @@ int main() {
 	FILE file;
 	char* path = "..\\File\\file.bin";
 
-	if (fopen(path, "w+"))
+	if (fopen(path, "wb") == NULL) {
+		printf("Errore -> Impossibile aprire il file\n");
+		return 0;
+	}
+
+
 		
 	book = (struct Libro*)malloc(sizeof(struct Libro));
 
