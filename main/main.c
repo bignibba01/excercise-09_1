@@ -21,15 +21,13 @@ void initializeBook(struct Libro);			//inizializzo un libro
 void showBooks();							//fa vedere tutti i libri
 void showSomeBooks(int);					//fa vedere alcuni libri
 
-char buffer[255];		//buffer di scrittura dei campi del libro
-
 struct Libro {
-	char* titolo;
-	char* autore;
+	char titolo[255];
+	char autore[255];
 	unsigned int annoPubblicazione;
-	char* casaEditrice;
+	char casaEditrice[255];
 	int numPagine;
-	char* genere;
+	char genere[255];
 	unsigned int id;
 	int valutazione;
 };
@@ -94,33 +92,38 @@ int main() {
 
 
 void addBook(struct Libro *book) {
-	/*printf("Titolo -> ");
+
+	printf("Titolo -> ");
 	scanf(" %[^\n]s", &book->titolo);
 	fflush(stdin);
+	char* t = realloc(*book->titolo, (strlen(book->titolo)));			//non funzia
 
-	printf("Autore -> ");
-	scanf(" %[^\n]s", &book->autore);
-	fflush(stdin);
+	if (t == NULL)
+		printf("Porcoddio\n");
 
-	printf("Anno di pubblicazione -> ");
-	scanf(" %d", &book->annoPubblicazione);
-	fflush(stdin);
+	//printf("Autore -> ");
+	//scanf(" %[^\n]s", &book->autore);
+	//fflush(stdin);
 
-	printf("Casa editrice -> ");
-	scanf(" %[^\n]s", &book->casaEditrice);
-	fflush(stdin);
+	//printf("Anno di pubblicazione -> ");
+	//scanf(" %d", &book->annoPubblicazione);
+	//fflush(stdin);
 
-	printf("Numero di pagine totali -> ");
-	scanf(" %d", &book->numPagine);
-	fflush(stdin);
+	//printf("Casa editrice -> ");
+	//scanf(" %[^\n]s", &book->casaEditrice);
+	//fflush(stdin);
 
-	printf("Genere -> ");
-	scanf(" %[^\n]s", &book->genere);
-	fflush(stdin);
-	*/
-	printf("Valutazione -> ");
-	scanf(" %d", &book->valutazione);
-	fflush(stdin);
+	//printf("Numero di pagine totali -> ");
+	//scanf(" %d", &book->numPagine);
+	//fflush(stdin);
+
+	//printf("Genere -> ");
+	//scanf(" %[^\n]s", &book->genere);
+	//fflush(stdin);
+	//
+	//printf("Valutazione -> ");
+	//scanf(" %d", &book->valutazione);
+	//fflush(stdin);
 }
 
 void drawMenu() {
@@ -134,11 +137,11 @@ void drawMenu() {
 }
 
 void initializeBook(struct Libro *book) {
-	book->titolo = (char*)malloc(sizeof(buffer));
-	book->autore = (char*)malloc(sizeof(buffer));
+	//book->titolo = (char*)malloc(sizeof(buffer));
+	//book->autore = (char*)malloc(sizeof(buffer));
 	book->annoPubblicazione = (int*)malloc(sizeof(int));
-	book->casaEditrice = (char*)malloc(sizeof(buffer));
+	/*book->casaEditrice = (char*)malloc(sizeof(buffer));*/
 	book->numPagine = (int*)malloc(sizeof(int));
-	book->genere = (char*)malloc(sizeof(buffer));
+	/*book->genere = (char*)malloc(sizeof(buffer));*/
 	book->valutazione = (int*)malloc(sizeof(int));
 }
