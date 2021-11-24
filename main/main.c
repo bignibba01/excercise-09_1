@@ -8,8 +8,84 @@ i file necessari per testare il programma.
 VENTRUCCI TOMAS, MARCHETTI DAVIDE, ZOLI FEREDEICO
 */
 
-#include <iostream>
+#define _CRT_SECURE_NO_WARNINGS
+#include <float.h>
+#include <stdio.h>
+
+void addBook(struct Libro*);					//aggiunge un libro al file
+void deleteBook();							//elimina un libro
+void initializeBook(struct Libro);			//inizializzo un libro
+void showBooks();							//fa vedere tutti i libri
+void showSomeBooks(int);					//fa vedere alcuni libri
+
+char buffer[255];		//buffer di scrittura dei campi del libro
+
+struct Libro {
+	char* titolo;
+	char* autore;
+	unsigned int annoPubblicazione;
+	char* casaEditrice;
+	int numPagine;
+	char* genere;
+	unsigned int id;
+	int valutazione;
+};
 
 int main() {
 
+	//initialize book struct char pointers
+	struct Libro *book;
+	FILE file;
+	char* path = "..\\File\\file.bin";
+
+	if (fopen(path, "w+"))
+		
+	book = (struct Libro*)malloc(sizeof(struct Libro));
+
+	addBook(book);
+		
+	printf("%d\n", book->valutazione);
+
+	return 0;
+}
+
+
+void addBook(struct Libro *book) {
+	/*printf("Titolo -> ");
+	scanf(" %[^\n]s", &book->titolo);
+	fflush(stdin);
+
+	printf("Autore -> ");
+	scanf(" %[^\n]s", &book->autore);
+	fflush(stdin);
+
+	printf("Anno di pubblicazione -> ");
+	scanf(" %d", &book->annoPubblicazione);
+	fflush(stdin);
+
+	printf("Casa editrice -> ");
+	scanf(" %[^\n]s", &book->casaEditrice);
+	fflush(stdin);
+
+	printf("Numero di pagine totali -> ");
+	scanf(" %d", &book->numPagine);
+	fflush(stdin);
+
+	printf("Genere -> ");
+	scanf(" %[^\n]s", &book->genere);
+	fflush(stdin);
+	*/
+	printf("Valutazione -> ");
+	scanf(" %d", &book->valutazione);
+	fflush(stdin);
+}
+
+void initializeBook(struct Libro *book) {
+	book->titolo = (char*)malloc(sizeof(buffer));
+	book->autore = (char*)malloc(sizeof(buffer));
+	book->annoPubblicazione = (int*)malloc(sizeof(int));
+	book->casaEditrice = (char*)malloc(sizeof(buffer));
+	book->numPagine = (int*)malloc(sizeof(int));
+	book->genere = (char*)malloc(sizeof(buffer));
+	book->valutazione = (int*)malloc(sizeof(int));
 }
