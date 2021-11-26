@@ -53,7 +53,7 @@ int main() {
 				book = (struct Libro*)malloc(sizeof(struct Libro));
 
 				FILE* file;
-				char* path = "..\\File\\file.bin";
+				char* path = "..\\File\\file.dat";
 
 				if ((file = fopen(path, "wb")) == NULL) {
 					printf("Errore -> Impossibile aprire il file\n");
@@ -61,6 +61,8 @@ int main() {
 				}
 
 				addBook(book);
+
+				fwrite(book, sizeof(book), )
 
 				fclose(file);
 				free(book);
@@ -93,42 +95,52 @@ int main() {
 
 void addBook(struct Libro *book) {
 
-	char titolo[255];
-
+	char buffer[255];
+	//---Inserimento nella struct Libro i valori inseriti dall'utente---
 	printf("Titolo -> ");
-	scanf(" %[^\n]s", &titolo);
-	printf("%d\n%d\n", sizeof(book->titolo), strlen(titolo));
-
+	scanf(" %[^\n]s", &buffer);
 	fflush(stdin);
-	book->titolo = (char*)malloc((sizeof(char) * strlen(titolo)));
-	strcpy(book->titolo, titolo);
 
-	printf("%s\n", book->titolo);
+	book->titolo = (char*)malloc((sizeof(char) * strlen(buffer)));
+	strcpy(book->titolo, buffer);
+
+	printf("Autore -> ");
+	scanf(" %[^\n]s", &buffer);
+	fflush(stdin);
+
+	book->autore = (char*)malloc((sizeof(char) * strlen(buffer)));
+	strcpy(book->autore, buffer);
+
+	printf("Anno di pubblicazione -> ");
+	scanf(" %d", &book->annoPubblicazione);
+	fflush(stdin);
 
 
-	//printf("Autore -> ");
-	//scanf(" %[^\n]s", &book->autore);
-	//fflush(stdin);
+	printf("Casa editrice -> ");
+	scanf(" %[^\n]s", &buffer);
+	fflush(stdin);
 
-	//printf("Anno di pubblicazione -> ");
-	//scanf(" %d", &book->annoPubblicazione);
-	//fflush(stdin);
+	book->casaEditrice = (char*)malloc((sizeof(char) * strlen(buffer)));
+	strcpy(book->casaEditrice, buffer);
 
-	//printf("Casa editrice -> ");
-	//scanf(" %[^\n]s", &book->casaEditrice);
-	//fflush(stdin);
+	printf("Numero di pagine totali -> ");
+	scanf(" %d", &book->numPagine);
+	fflush(stdin);
 
-	//printf("Numero di pagine totali -> ");
-	//scanf(" %d", &book->numPagine);
-	//fflush(stdin);
+	printf("Genere -> ");
+	scanf(" %[^\n]s", &buffer);
+	fflush(stdin);
 
-	//printf("Genere -> ");
-	//scanf(" %[^\n]s", &book->genere);
-	//fflush(stdin);
-	//
-	//printf("Valutazione -> ");
-	//scanf(" %d", &book->valutazione);
-	//fflush(stdin);
+	book->genere = (char*)malloc((sizeof(char) * strlen(buffer)));
+	strcpy(book->genere, buffer);
+	
+	printf("Valutazione -> ");
+	scanf(" %d", &book->valutazione);
+	fflush(stdin);
+	//---Fine insermimento---
+
+	
+
 }
 
 void drawMenu() {
