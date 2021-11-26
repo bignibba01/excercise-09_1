@@ -22,12 +22,12 @@ void showBooks();							//fa vedere tutti i libri
 void showSomeBooks(int);					//fa vedere alcuni libri
 
 struct Libro {
-	char titolo[255];
-	char autore[255];
+	char* titolo;
+	char* autore;
 	unsigned int annoPubblicazione;
-	char casaEditrice[255];
+	char* casaEditrice;
 	int numPagine;
-	char genere[255];
+	char* genere;
 	unsigned int id;
 	int valutazione;
 };
@@ -93,13 +93,18 @@ int main() {
 
 void addBook(struct Libro *book) {
 
-	printf("Titolo -> ");
-	scanf(" %[^\n]s", &book->titolo);
-	fflush(stdin);
-	char* t = realloc(*book->titolo, (strlen(book->titolo)));			//non funzia
+	char titolo[255];
 
-	if (t == NULL)
-		printf("Porcoddio\n");
+	printf("Titolo -> ");
+	scanf(" %[^\n]s", &titolo);
+	printf("%d\n%d\n", sizeof(book->titolo), strlen(titolo));
+
+	fflush(stdin);
+	book->titolo = (char*)malloc((sizeof(char) * strlen(titolo)));
+	strcpy(book->titolo, titolo);
+
+	printf("%s\n", book->titolo);
+
 
 	//printf("Autore -> ");
 	//scanf(" %[^\n]s", &book->autore);
