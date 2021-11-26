@@ -34,6 +34,8 @@ struct Libro {
 
 int main() {
 
+	FILE* file;
+	char* path = "..\\File\\file.dat";
 	_Bool endLoop = false;
 
 	while (true) {
@@ -50,10 +52,14 @@ int main() {
 			case 1: {
 				struct Libro* book;
 
-				book = (struct Libro*)malloc(sizeof(struct Libro));
+				if ((file = fopen(path, "r")) == NULL) {
+					printf("Errore -> Impossibile aprire il file\n");
+					return 0;
+				}
 
-				FILE* file;
-				char* path = "..\\File\\file.dat";
+				fclose(file);
+
+				book = (struct Libro*)malloc(sizeof(struct Libro));
 
 				if ((file = fopen(path, "wb")) == NULL) {
 					printf("Errore -> Impossibile aprire il file\n");
@@ -61,8 +67,10 @@ int main() {
 				}
 
 				addBook(book);
-
-				fwrite(book, sizeof(book), )
+				printf("%d\n%d\n", sizeof(*book), sizeof(struct Libro));
+				fwrite(book, sizeof(struct Libro), 1, file);
+				fwrite(book, sizeof(struct Libro), 1, file);
+				int num[] = { 0, 1 };
 
 				fclose(file);
 				free(book);
@@ -73,6 +81,20 @@ int main() {
 				break;
 			}
 			case 3: {
+				//showBooks();
+
+				if ((file = fopen(path, "rb")) == NULL) {
+					printf("Errore -> Impossibile aprire il file\n");
+					return 0;
+				}
+
+				struct Libro books[5];
+
+				fread(books, sizeof(struct Libro), 2, file);
+
+				for (int i = 0; i < 2; i++)
+					printf("%s\n", books[i].titolo);
+
 				break;
 			}
 			case 4: {
