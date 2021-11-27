@@ -17,17 +17,16 @@ void addBook(struct Libro*);				//aggiunge un libro al file
 void deleteBook();							//elimina un libro
 void drawMenu();							//disegna il menu principale per scegliere le operazioni
 int getLastId(struct Libro);				//prende l'ultimo id inserito nel file di testo
-void initializeBook(struct Libro);			//inizializzo un libro
 void showBooks();							//fa vedere tutti i libri
 void showSomeBooks(int);					//fa vedere alcuni libri
 
 struct Libro {
-	char* titolo;
-	char* autore;
+	char titolo[50];
+	char autore[30];
 	unsigned int annoPubblicazione;
-	char* casaEditrice;
+	char casaEditrice[30];
 	int numPagine;
-	char* genere;
+	char genere[30];
 	unsigned int id;
 	int valutazione;
 };
@@ -35,7 +34,7 @@ struct Libro {
 int main() {
 
 	FILE* file;
-	char* path = "..\\File\\file.dat";
+	char* path = "..\\File\\file.bin";
 	_Bool endLoop = false;
 
 	while (true) {
@@ -52,7 +51,7 @@ int main() {
 			case 1: {
 				struct Libro* book;
 
-				if ((file = fopen(path, "r")) == NULL) {
+				if ((file = fopen(path, "rb+")) == NULL) {
 					printf("Errore -> Impossibile aprire il file\n");
 					return 0;
 				}
@@ -61,7 +60,7 @@ int main() {
 
 				book = (struct Libro*)malloc(sizeof(struct Libro));
 
-				if ((file = fopen(path, "wb")) == NULL) {
+				if ((file = fopen(path, "ab")) == NULL) {
 					printf("Errore -> Impossibile aprire il file\n");
 					return 0;
 				}
@@ -70,7 +69,6 @@ int main() {
 				printf("%d\n%d\n", sizeof(*book), sizeof(struct Libro));
 				fwrite(book, sizeof(struct Libro), 1, file);
 				fwrite(book, sizeof(struct Libro), 1, file);
-				int num[] = { 0, 1 };
 
 				fclose(file);
 				free(book);
@@ -88,12 +86,16 @@ int main() {
 					return 0;
 				}
 
-				struct Libro books[5];
+				struct Libro *books;
 
-				fread(books, sizeof(struct Libro), 2, file);
+				books = (struct Libro*)malloc(sizeof(struct Libro));
 
-				for (int i = 0; i < 2; i++)
-					printf("%s\n", books[i].titolo);
+				/*printf("%d\n", ftell(file));
+				rewind(file);*/
+				printf("%d\n", ftell(file));
+				//fread(books, sizeof(struct Libro), 1, file);
+				printf("%d\n", ftell(file));
+				fscanf(file, "%s", books->titolo);
 
 				break;
 			}
@@ -117,21 +119,14 @@ int main() {
 
 void addBook(struct Libro *book) {
 
-	char buffer[255];
 	//---Inserimento nella struct Libro i valori inseriti dall'utente---
 	printf("Titolo -> ");
-	scanf(" %[^\n]s", &buffer);
+	scanf(" %[^\n]s", book->titolo);
 	fflush(stdin);
-
-	book->titolo = (char*)malloc((sizeof(char) * strlen(buffer)));
-	strcpy(book->titolo, buffer);
 
 	printf("Autore -> ");
-	scanf(" %[^\n]s", &buffer);
+	scanf(" %[^\n]s", book->autore);
 	fflush(stdin);
-
-	book->autore = (char*)malloc((sizeof(char) * strlen(buffer)));
-	strcpy(book->autore, buffer);
 
 	printf("Anno di pubblicazione -> ");
 	scanf(" %d", &book->annoPubblicazione);
@@ -139,22 +134,16 @@ void addBook(struct Libro *book) {
 
 
 	printf("Casa editrice -> ");
-	scanf(" %[^\n]s", &buffer);
+	scanf(" %[^\n]s", book->casaEditrice);
 	fflush(stdin);
-
-	book->casaEditrice = (char*)malloc((sizeof(char) * strlen(buffer)));
-	strcpy(book->casaEditrice, buffer);
 
 	printf("Numero di pagine totali -> ");
 	scanf(" %d", &book->numPagine);
 	fflush(stdin);
 
 	printf("Genere -> ");
-	scanf(" %[^\n]s", &buffer);
+	scanf(" %[^\n]s", book->genere);
 	fflush(stdin);
-
-	book->genere = (char*)malloc((sizeof(char) * strlen(buffer)));
-	strcpy(book->genere, buffer);
 	
 	printf("Valutazione -> ");
 	scanf(" %d", &book->valutazione);
@@ -173,14 +162,4 @@ void drawMenu() {
 4)Viusalizza per valutazione\n\
 5)Esci\n");
 
-}
-
-void initializeBook(struct Libro *book) {
-	//book->titolo = (char*)malloc(sizeof(buffer));
-	//book->autore = (char*)malloc(sizeof(buffer));
-	book->annoPubblicazione = (int*)malloc(sizeof(int));
-	/*book->casaEditrice = (char*)malloc(sizeof(buffer));*/
-	book->numPagine = (int*)malloc(sizeof(int));
-	/*book->genere = (char*)malloc(sizeof(buffer));*/
-	book->valutazione = (int*)malloc(sizeof(int));
 }
