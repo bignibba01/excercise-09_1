@@ -13,7 +13,7 @@ VENTRUCCI TOMAS, MARCHETTI DAVIDE, ZOLI FEREDEICO
 #include <stdio.h>
 #include <stdlib.h>
 
-void addBook(struct Libro*);				//aggiunge un libro al file
+void addBook(struct Libro*, int);				//aggiunge un libro al file
 void deleteBook();							//elimina un libro
 void drawMenu();							//disegna il menu principale per scegliere le operazioni
 int getLastId(struct Libro);				//prende l'ultimo id inserito nel file di testo
@@ -35,9 +35,9 @@ struct Libro {
 int main() {
 
 	FILE* file;
-	char* path = "..\\File\\file.dat";
+	char* path = "..\\File\\file.bin";
 	_Bool endLoop = false;
-	int numberElement = 0;
+	int numberElement = 0, error = 0;
 
 	while (true) {
 		
@@ -51,29 +51,32 @@ int main() {
 
 		switch (result) {
 			case 1: {
-				struct Libro* book = (struct Libro*)malloc(sizeof(struct Libro));
 
-				if ((file = fopen(path, "rb")) == NULL) {
+				struct Libro* tmp = malloc(sizeof(*tmp));
+
+				if ((file = fopen(path, "wb+")) == NULL) {
 					printf("Errore -> Impossibile aprire il file\n");
 					return 0;
 				}
 
-				while (fread(book, sizeof(struct Libro), 1, file)) {
-					numberElement++;
+				while (fread(tmp, sizeof(struct Libro), 1, file)) {			//leggo tutti i libri finchè ce ne sono nel file
+					numberElement++;		//conto il numero di libri presenti
 				}
+				numberElement++;
+				struct Libro* book = malloc(numberElement * sizeof(struct Libro));
+					rewind(file);				//rimando all inizio il puntatore del file binario
+					while (fread(book, sizeof(struct Libro), 1, file));				//leggo tutti i libri finchè ce ne sono nel file
 
-				book = (struct Libro*)malloc(numberElement * sizeof(struct Libro));
+					addBook(book, numberElement-1);				//aggiunge all ultimo elemento del vettore il libro inserito
 
-				if ((file = fopen(path, "ab")) == NULL) {
-					printf("Errore -> Impossibile aprire il file\n");
-					return 0;
-				}
-				printf("%d\n", ftell(file));
-				addBook(book);
-				fwrite(book, sizeof(struct Libro), 1, file);
+					rewind(file);
+					error = fwrite(book, sizeof(struct Libro), numberElement, file);
+
+				if (error == 0)
+					printf("nadade nada\n");
+				system("pause");
 
 				fclose(file);
-
 				free(book);
 
 				break;
@@ -125,35 +128,35 @@ int main() {
 	return 0;
 }
 
-void addBook(struct Libro *book) {
+void addBook(struct Libro *book, int index) {
 
 	//---Inserimento nella struct Libro i valori inseriti dall'utente---
 	printf("Titolo -> ");
-	scanf(" %[^\n]s", book->titolo);
+	scanf(" %[^\n]s", book[index].titolo);
 	fflush(stdin);
 
 	printf("Autore -> ");
-	scanf(" %[^\n]s", book->autore);
+	scanf(" %[^\n]s", book[index].autore);
 	fflush(stdin);
 
 	printf("Anno di pubblicazione -> ");
-	scanf(" %d", &book->annoPubblicazione);
+	scanf(" %d", &book[index].annoPubblicazione);
 	fflush(stdin);
 
 	printf("Casa editrice -> ");
-	scanf(" %[^\n]s", book->casaEditrice);
+	scanf(" %[^\n]s", book[index].casaEditrice);
 	fflush(stdin);
 
 	printf("Numero di pagine totali -> ");
-	scanf(" %d", &book->numPagine);
+	scanf(" %d", &book[index].numPagine);
 	fflush(stdin);
 
 	printf("Genere -> ");
-	scanf(" %[^\n]s", book->genere);
+	scanf(" %[^\n]s", book[index].genere);
 	fflush(stdin);
 	
 	printf("Valutazione -> ");
-	scanf(" %d", &book->valutazione);
+	scanf(" %d", &book[index].valutazione);
 	fflush(stdin);
 	//---Fine insermimento---
 
