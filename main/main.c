@@ -36,6 +36,7 @@ int main() {
 	FILE* file;
 	char* path = "..\\File\\file.bin";
 	_Bool endLoop = false;
+	int numberElement = 0;
 
 	while (true) {
 		
@@ -65,6 +66,12 @@ int main() {
 					return 0;
 				}
 
+				int error = fprintf(file, "%d", &error);
+
+				if (error == 0) {
+					fprintf(file, "%d", numberElement);
+				}
+
 				addBook(book);
 				printf("%d\n%d\n", sizeof(*book), sizeof(struct Libro));
 				fwrite(book, sizeof(struct Libro), 1, file);
@@ -86,16 +93,20 @@ int main() {
 					return 0;
 				}
 
-				struct Libro *books;
-
-				books = (struct Libro*)malloc(sizeof(struct Libro));
-
-				/*printf("%d\n", ftell(file));
-				rewind(file);*/
+				fprintf(file, "%d", &numberElement);
 				printf("%d\n", ftell(file));
-				//fread(books, sizeof(struct Libro), 1, file);
-				printf("%d\n", ftell(file));
-				fscanf(file, "%s", books->titolo);
+
+				struct Libro books[5];
+
+				int i = fread(books, sizeof(struct Libro), 3, file);
+				printf("%d\n", i);
+				//fscanf(file, "%s", books->titolo);
+				if (i == 0)
+					printf("File vuoto\n");
+				else
+					printf("%s\n", books[0].titolo);
+
+				system("pause");
 
 				break;
 			}
