@@ -17,6 +17,7 @@ void addBook(struct Libro*);				//aggiunge un libro al file
 void deleteBook();							//elimina un libro
 void drawMenu();							//disegna il menu principale per scegliere le operazioni
 int getLastId(struct Libro);				//prende l'ultimo id inserito nel file di testo
+int getNumberElement(FILE*);				//legge il primo intero nel file di testo indicando il numero di libri presenti nel file
 void showBooks();							//fa vedere tutti i libri
 void showSomeBooks(int);					//fa vedere alcuni libri
 
@@ -34,7 +35,7 @@ struct Libro {
 int main() {
 
 	FILE* file;
-	char* path = "..\\File\\file.bin";
+	char* path = "..\\File\\file.dat";
 	_Bool endLoop = false;
 	int numberElement = 0;
 
@@ -50,34 +51,29 @@ int main() {
 
 		switch (result) {
 			case 1: {
-				struct Libro* book;
+				struct Libro* book = (struct Libro*)malloc(sizeof(struct Libro));
 
-				if ((file = fopen(path, "rb+")) == NULL) {
+				if ((file = fopen(path, "rb")) == NULL) {
 					printf("Errore -> Impossibile aprire il file\n");
 					return 0;
 				}
 
-				fclose(file);
+				while (fread(book, sizeof(struct Libro), 1, file)) {
+					numberElement++;
+				}
 
-				book = (struct Libro*)malloc(sizeof(struct Libro));
+				book = (struct Libro*)malloc(numberElement * sizeof(struct Libro));
 
 				if ((file = fopen(path, "ab")) == NULL) {
 					printf("Errore -> Impossibile aprire il file\n");
 					return 0;
 				}
-
-				int error = fprintf(file, "%d", &numberElement);
-
-				if (error == 0) {
-					printf("Dati non inseriti\n");
-				}
-
+				printf("%d\n", ftell(file));
 				addBook(book);
-				printf("%d\n%d\n", sizeof(*book), sizeof(struct Libro));
-				fwrite(book, sizeof(struct Libro), 1, file);
 				fwrite(book, sizeof(struct Libro), 1, file);
 
 				fclose(file);
+
 				free(book);
 
 				break;
@@ -95,12 +91,13 @@ int main() {
 
 				//fprintf(file, "%d", &numberElement);
 				printf("%d\n", ftell(file));
-				fscanf(file, "%d", &numberElement);
 
-				struct Libro books[5];
+				int i = fscanf(file, "%d", &numberElement);				//prende il numero di elementi nel file
 
-				int i = fread(books, sizeof(struct Libro), 3, file);
-				printf("%d\n", i);
+				struct Libro* books = (struct Libro*)malloc(numberElement * sizeof(struct Libro));
+
+				fread(books, sizeof(struct Libro), numberElement, file);
+				printf("%d\n", numberElement);
 				//fscanf(file, "%s", books->titolo);
 				if (i == 0)
 					printf("File vuoto\n");
@@ -128,7 +125,6 @@ int main() {
 	return 0;
 }
 
-
 void addBook(struct Libro *book) {
 
 	//---Inserimento nella struct Libro i valori inseriti dall'utente---
@@ -143,7 +139,6 @@ void addBook(struct Libro *book) {
 	printf("Anno di pubblicazione -> ");
 	scanf(" %d", &book->annoPubblicazione);
 	fflush(stdin);
-
 
 	printf("Casa editrice -> ");
 	scanf(" %[^\n]s", book->casaEditrice);
@@ -162,8 +157,6 @@ void addBook(struct Libro *book) {
 	fflush(stdin);
 	//---Fine insermimento---
 
-	
-
 }
 
 void drawMenu() {
@@ -174,4 +167,11 @@ void drawMenu() {
 4)Viusalizza per valutazione\n\
 5)Esci\n");
 
+}
+
+int getNumberElement(FILE* file) {
+	int number = 0;
+	rewind(file);
+	fscanf(file, "%d", &number);
+	return number;
 }
