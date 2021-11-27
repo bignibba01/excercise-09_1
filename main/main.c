@@ -66,10 +66,10 @@ int main() {
 					return 0;
 				}
 
-				int error = fprintf(file, "%d", &error);
+				int error = fprintf(file, "%d", &numberElement);
 
 				if (error == 0) {
-					fprintf(file, "%d", numberElement);
+					printf("Dati non inseriti\n");
 				}
 
 				addBook(book);
@@ -93,8 +93,9 @@ int main() {
 					return 0;
 				}
 
-				fprintf(file, "%d", &numberElement);
+				//fprintf(file, "%d", &numberElement);
 				printf("%d\n", ftell(file));
+				fscanf(file, "%d", &numberElement);
 
 				struct Libro books[5];
 
