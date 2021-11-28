@@ -54,7 +54,7 @@ int main() {
 
 				struct Libro* tmp = malloc(sizeof(*tmp));
 
-				if ((file = fopen(path, "wb+")) == NULL) {
+				if ((file = fopen(path, "rb+")) == NULL) {
 					printf("Errore -> Impossibile aprire il file\n");
 					return 0;
 				}
@@ -63,22 +63,27 @@ int main() {
 					numberElement++;		//conto il numero di libri presenti
 				}
 				numberElement++;
-				struct Libro* book = malloc(numberElement * sizeof(struct Libro));
-					rewind(file);				//rimando all inizio il puntatore del file binario
-					while (fread(book, sizeof(struct Libro), 1, file));				//leggo tutti i libri finchè ce ne sono nel file
+				struct Libro* book = calloc(numberElement, numberElement * sizeof(*book));
+				rewind(file);				//rimando all inizio il puntatore del file binario
 
-					addBook(book, numberElement-1);				//aggiunge all ultimo elemento del vettore il libro inserito
+				int index = 0;
+				while (fread(tmp, sizeof(struct Libro), 1, file)) {				//leggo tutti i libri finchè ce ne sono nel file
+					
+					strcpy(book[index].titolo, tmp->titolo);
 
-					rewind(file);
-					error = fwrite(book, sizeof(struct Libro), numberElement, file);
+					printf("%s\n", book[index].titolo);
+					index++;
+				}
 
-				if (error == 0)
-					printf("nadade nada\n");
-				system("pause");
+				addBook(book, numberElement-1);				//aggiunge all ultimo elemento del vettore il libro inserito
+
+				rewind(file);
+				fwrite(book, sizeof(struct Libro) * numberElement, numberElement, file);
 
 				fclose(file);
 				free(book);
 
+				system("pause");
 				break;
 			}
 			case 2: {
