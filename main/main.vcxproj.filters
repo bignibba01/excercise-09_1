@@ -24,4 +24,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="File\file.bin">
+      <Filter>File di risorse</Filter>
+    </None>
+  </ItemGroup>
 </Project>

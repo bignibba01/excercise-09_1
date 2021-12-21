@@ -20,16 +20,10 @@ int getNumberElement(FILE*);				//legge il primo intero nel file di testo indica
 
 int main() {
 
-	FILE* file;
-	char* path = "File\\file.dat";
+	Libro* book = malloc(sizeof(Libro));
+	char* path = "File\\file.bin";
 	_Bool endLoop = false;
 	int numberElement = 0, error = 0;
-
-	if ((file = fopen(path, "ab")) != NULL) {
-		printf("GG\n");				//lesgo
-	}
-
-	system("pause");
 
 	while (true) {
 		
@@ -43,6 +37,21 @@ int main() {
 
 		switch (result) {
 			case 1: {
+				FILE* file;
+				if ((file = fopen(path, "ab")) == NULL) {
+					printf("Error -> Impossibile aprire il file.\n");				//lesgo
+					system("pause");
+					break;
+				}
+
+				addBook(book);
+				printf("%s\n", book->titolo);
+				fwrite(&book, sizeof(Libro), 1, file);
+				if (fwrite != 0)
+					printf("OK\n");
+				else
+					printf("GLS\n");
+				fclose(file);
 
 				system("pause");
 				break;
@@ -51,8 +60,22 @@ int main() {
 				break;
 			}
 			case 3: {
-				system("pause");
+				FILE* fileRead = NULL;
+				Libro* tmp = NULL;
+				fileRead = fopen(path, "r+b");
+				if (fileRead == NULL) {
+					printf("Error -> Impossibile aprire il file.\n");
+					system("pause");
+					break;
+				}
 
+				while (fread(&tmp, sizeof(Libro), 1, fileRead) == 1) {
+					printf("titolo -> %s, autore -> %s\n", tmp->titolo, tmp->autore);
+				}
+				rewind(fileRead);
+				fclose(fileRead);
+				free(tmp);
+				system("pause");
 				break;
 			}
 			case 4: {
@@ -72,35 +95,35 @@ int main() {
 	return 0;
 }
 
-void addBook(Libro *book, int index) {
+void addBook(Libro *book) {
 
 	//---Inserimento nella struct Libro i valori inseriti dall'utente---
 	printf("Titolo -> ");
-	scanf(" %[^\n]s", book[index].titolo);
+	scanf(" %[^\n]s", book->titolo);
 	fflush(stdin);
 
 	printf("Autore -> ");
-	scanf(" %[^\n]s", book[index].autore);
+	scanf(" %[^\n]s", book->autore);
 	fflush(stdin);
 
 	printf("Anno di pubblicazione -> ");
-	scanf(" %d", &book[index].annoPubblicazione);
+	scanf(" %d", &book->annoPubblicazione);
 	fflush(stdin);
 
 	printf("Casa editrice -> ");
-	scanf(" %[^\n]s", book[index].casaEditrice);
+	scanf(" %[^\n]s", book->casaEditrice);
 	fflush(stdin);
 
 	printf("Numero di pagine totali -> ");
-	scanf(" %d", &book[index].numPagine);
+	scanf(" %d", &book->numPagine);
 	fflush(stdin);
 
 	printf("Genere -> ");
-	scanf(" %[^\n]s", book[index].genere);
+	scanf(" %[^\n]s", book->genere);
 	fflush(stdin);
 	
 	printf("Valutazione -> ");
-	scanf(" %d", &book[index].valutazione);
+	scanf(" %d", &book->valutazione);
 	fflush(stdin);
 	//---Fine insermimento---
 
