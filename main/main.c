@@ -12,32 +12,24 @@ VENTRUCCI TOMAS, MARCHETTI DAVIDE, ZOLI FEREDEICO
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "book.h"
 
-void addBook(struct Libro*, int);				//aggiunge un libro al file
-void deleteBook();							//elimina un libro
 void drawMenu();							//disegna il menu principale per scegliere le operazioni
 int getLastId(struct Libro);				//prende l'ultimo id inserito nel file di testo
 int getNumberElement(FILE*);				//legge il primo intero nel file di testo indicando il numero di libri presenti nel file
-void showBooks();							//fa vedere tutti i libri
-void showSomeBooks(int);					//fa vedere alcuni libri
-
-struct Libro {
-	char titolo[50];
-	char autore[30];
-	unsigned int annoPubblicazione;
-	char casaEditrice[30];
-	int numPagine;
-	char genere[30];
-	unsigned int id;
-	int valutazione;
-};
 
 int main() {
 
 	FILE* file;
-	char* path = "..\\File\\file.bin";
+	char* path = "File\\file.dat";
 	_Bool endLoop = false;
 	int numberElement = 0, error = 0;
+
+	if ((file = fopen(path, "ab")) != NULL) {
+		printf("GG\n");				//lesgo
+	}
+
+	system("pause");
 
 	while (true) {
 		
@@ -52,37 +44,6 @@ int main() {
 		switch (result) {
 			case 1: {
 
-				struct Libro* tmp = malloc(sizeof(*tmp));
-
-				if ((file = fopen(path, "rb+")) == NULL) {
-					printf("Errore -> Impossibile aprire il file\n");
-					return 0;
-				}
-
-				while (fread(tmp, sizeof(struct Libro), 1, file)) {			//leggo tutti i libri finchè ce ne sono nel file
-					numberElement++;		//conto il numero di libri presenti
-				}
-				numberElement++;
-				struct Libro* book = calloc(numberElement, numberElement * sizeof(*book));
-				rewind(file);				//rimando all inizio il puntatore del file binario
-
-				int index = 0;
-				while (fread(tmp, sizeof(struct Libro), 1, file)) {				//leggo tutti i libri finchè ce ne sono nel file
-					
-					strcpy(book[index].titolo, tmp->titolo);
-
-					printf("%s\n", book[index].titolo);
-					index++;
-				}
-
-				addBook(book, numberElement-1);				//aggiunge all ultimo elemento del vettore il libro inserito
-
-				rewind(file);
-				fwrite(book, sizeof(struct Libro) * numberElement, numberElement, file);
-
-				fclose(file);
-				free(book);
-
 				system("pause");
 				break;
 			}
@@ -90,28 +51,6 @@ int main() {
 				break;
 			}
 			case 3: {
-				//showBooks();
-
-				if ((file = fopen(path, "rb")) == NULL) {
-					printf("Errore -> Impossibile aprire il file\n");
-					return 0;
-				}
-
-				//fprintf(file, "%d", &numberElement);
-				printf("%d\n", ftell(file));
-
-				int i = fscanf(file, "%d", &numberElement);				//prende il numero di elementi nel file
-
-				struct Libro* books = (struct Libro*)malloc(numberElement * sizeof(struct Libro));
-
-				fread(books, sizeof(struct Libro), numberElement, file);
-				printf("%d\n", numberElement);
-				//fscanf(file, "%s", books->titolo);
-				if (i == 0)
-					printf("File vuoto\n");
-				else
-					printf("%s\n", books[0].titolo);
-
 				system("pause");
 
 				break;
@@ -124,16 +63,16 @@ int main() {
 				break;
 			}
 		}
-		
-		system("cls");
 		if (endLoop)
 			break;
+		
+		system("cls");
 	}
 
 	return 0;
 }
 
-void addBook(struct Libro *book, int index) {
+void addBook(Libro *book, int index) {
 
 	//---Inserimento nella struct Libro i valori inseriti dall'utente---
 	printf("Titolo -> ");
